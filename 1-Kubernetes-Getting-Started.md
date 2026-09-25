@@ -20,10 +20,10 @@ Your task as the DevOps engineer:
 
 ### 1. Install kubectl and Minikube (Windows, via winget)
 
-\`\`\`
+```
 winget install -e --id Kubernetes.kubectl
 winget install -e --id Kubernetes.minikube
-\`\`\`
+```
 
 > Docker Desktop must be installed and running, since this exercise uses the **docker** driver.
 
@@ -31,41 +31,41 @@ winget install -e --id Kubernetes.minikube
 
 **1. Start a local Kubernetes cluster with Minikube:**
 
-\`\`\`
+```
 minikube start --driver=docker
-\`\`\`
+```
 
 **2. Confirm the cluster is ready:**
 
-\`\`\`
+```
 kubectl get nodes
-\`\`\`
+```
 
 **3. Create your first Pod (using Nginx image):**
 
-\`\`\`
+```
 kubectl run hello-k8s --image=nginx --port=80
-\`\`\`
+```
 
 **4. Verify the Pod is running:**
 
-\`\`\`
+```
 kubectl get pods
-\`\`\`
+```
 
 ![Cluster and Pod status](Images/cluster-and-pod-status.png)
 
 **5. Expose the Pod as a Service:**
 
-\`\`\`
+```
 kubectl expose pod hello-k8s --type=NodePort --port=80
-\`\`\`
+```
 
 **6. Open the app in your browser:**
 
-\`\`\`
+```
 minikube service hello-k8s
-\`\`\`
+```
 
 You should see the Nginx welcome page. **Congratulations, you just deployed your first container in Kubernetes!**
 
