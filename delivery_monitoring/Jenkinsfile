@@ -1,0 +1,44 @@
+pipeline {
+    agent any
+    stages {
+        stage('Pre-check Docker') {
+            steps {
+                sh 'docker --version'
+                sh 'docker info > /dev/null'
+                echo 'Docker is available and running'
+            }
+        }
+        stage('Setup Workspace') {
+            steps {
+                // /src is the delivery_monitoring folder mounted into the Jenkins container
+                sh 'cp /src/delivery_metrics.py /src/Dockerfile /src/Dockerfile.prometheus /src/prometheus.yml /src/alert_rules.yml .'
+                sh 'ls -l'
+            }
+        }
+        stage('Build Docker Images') {
+            steps {
+                sh 'docker build -t delivery_metrics .'
+                sh 'docker build -t prometheus_delivery -f Dockerfile.prometheus .'
+            }
+        }
+        stage('Run Application') {
+            steps {
+                sh '''
+                docker network inspect monitoring-net >/dev/null 2>&1 || docker network create monitoring-net
+                docker rm -f delivery_metrics || true
+                docker run -d --name delivery_metrics --network monitoring-net -p 8000:8000 delivery_metrics
+                '''
+            }
+        }
+        stage('Run Prometheus & Grafana') {
+            steps {
+                sh '''
+                docker rm -f prometheus || true
+                docker run -d --name prometheus --network monitoring-net -p 9090:9090 prometheus_delivery
+                docker inspect grafana >/dev/null 2>&1 || docker run -d --name grafana --network monitoring-net -p 3000:3000 grafana/grafana
+                docker start grafana || true
+                '''
+            }
+        }
+    }
+}
