@@ -43,7 +43,6 @@ docker --version
 Docker version 29.8.2, build 7fc2dff
 ```
 
-
 ### Step 2: Install Jenkins using Docker
 
 ```cmd
@@ -70,6 +69,7 @@ f648938b19fe   jenkins/jenkins:lts                   "/usr/bin/tini -- /u…"   
 e812b3e0d6bc   gcr.io/k8s-minikube/kicbase:v0.0.50   "/usr/local/bin/entr…"   27 hours ago     Exited (130) 24 hours ago                                                                                                  minikube
 ```
 
+The `jenkins` container is `Up` with host port 8082 mapped to Jenkins' internal port 8080.
 
 ### Step 4: Get the Jenkins initial admin password
 
@@ -78,7 +78,7 @@ docker exec jenkins cat /var/jenkins_home/secrets/initialAdminPassword
 ```
 
 ```
-Password :)
+<initial admin password printed here>
 ```
 
 ### Step 5: Access Jenkins on port 8082
@@ -91,20 +91,19 @@ http://localhost:8082/
 
 **Unlock Jenkins** by pasting the initial admin password:
 
-![Jenkins - Unlock Jenkins](screenshots/jenkins-unlock.png)
+![Jenkins - Unlock Jenkins](Images/jenkins-unlock.png)
 
 **Customize Jenkins** by choosing *Install suggested plugins*:
 
-![Jenkins - Getting Started](screenshots/jenkins-getting-started.png)
-
+![Jenkins - Getting Started](Images/jenkins-getting-started.png)
 
 **Create the first admin user** and confirm the Jenkins URL:
 
-![Jenkins - Create admin user](screenshots/jenkins-create-admin.png)
+![Jenkins - Create admin user](Images/jenkins-create-admin.png)
 
 **Jenkins landing page (dashboard):**
 
-![Jenkins - Landing page](screenshots/jenkins-landing-page.png)
+![Jenkins - Landing page](Images/jenkins-landing-page.png)
 
 ---
 
