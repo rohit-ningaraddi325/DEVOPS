@@ -1,0 +1,61 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Build') {
+            steps {
+                echo 'Creating virtual environment and installing dependencies...'
+                dir('Jenkins-MultiStage-Pipeline') {
+                    sh 'python3 --version'
+                }
+            }
+        }
+        stage('Test') {
+            steps {
+                echo 'Running tests...'
+                dir('Jenkins-MultiStage-Pipeline') {
+                    sh 'python3 -m unittest discover -s .'
+                }
+            }
+        }
+        stage('Deploy') {
+            steps {
+                echo 'Deploying application...'
+                dir('Jenkins-MultiStage-Pipeline') {
+                    sh '''
+                    mkdir -p python-app-deploy
+                    cp app.py python-app-deploy/
+                    '''
+                }
+            }
+        }
+        stage('Run Application') {
+            steps {
+                echo 'Running application...'
+                dir('Jenkins-MultiStage-Pipeline') {
+                    sh '''
+                    nohup python3 python-app-deploy/app.py > python-app-deploy/app.log 2>&1 &
+                    echo $! > python-app-deploy/app.pid
+                    '''
+                }
+            }
+        }
+        stage('Test Application') {
+            steps {
+                echo 'Testing application...'
+                dir('Jenkins-MultiStage-Pipeline') {
+                    sh 'python3 test_app.py'
+                }
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'Pipeline completed successfully!'
+        }
+        failure {
+            echo 'Pipeline failed. Check the logs for more details.'
+        }
+    }
+}
