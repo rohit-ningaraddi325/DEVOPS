@@ -1,0 +1,2 @@
+Docker containers package applications with their dependencies.
+Kubernetes runs and scales those containers across nodes.
